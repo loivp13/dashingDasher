@@ -1,7 +1,7 @@
 {
   "name": "nodejs-express-sequelize-postgresql-react",
   "version": "1.0.0",
-  "description": "A broilerplate for Nodejs, Sequelize, and React with extra features such as Tailwindcss, AWS SES, JWT and more.",
+  "description": "Fullstack application to repliacte DoorDash, a popular food delivery app.",
   "contributors": [
     {
       "name": "Loi Van Pham",
