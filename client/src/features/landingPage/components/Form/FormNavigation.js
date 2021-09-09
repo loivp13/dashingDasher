@@ -4,13 +4,7 @@ import { Grid, Button } from "@material-ui/core";
 import useStyles from "./FormNavigation.styles";
 import { v4 as uuidv4 } from "uuid";
 
-export default function FormNavigation({
-  handleSignUpClick,
-  handleForgotPwClick,
-  handleSignInClick,
-  curView,
-  handleNavigationalClick,
-}) {
+export default function FormNavigation({ curView, handleNavigationalClick }) {
   let buttonsInfo = {
     signin: {
       content: "Sign In",

@@ -4,6 +4,7 @@ import FormItems from "./FormItems";
 import FormNavigation from "./FormNavigation";
 import cloneDeep from "lodash/cloneDeep";
 import useStyles from "./Form.styles";
+import axios_api from "../../../../helpers/axios";
 
 export default function Form({ curView, setCurView }) {
   let classes = useStyles();
@@ -33,7 +34,10 @@ export default function Form({ curView, setCurView }) {
     switch (curView) {
       case "signin":
         if (isValidateForm(cloneErrorInfo)) {
-          console.log("send http");
+          axios_api.post("/signin", {
+            username: formInfo[curView].username,
+            password: formInfo[curView].password,
+          });
         } else {
           setErrorInfo(cloneErrorInfo);
         }
@@ -77,14 +81,15 @@ export default function Form({ curView, setCurView }) {
   const handleNavigationalClick = (view) => {
     setCurView(view);
   };
-  const handleForgotPwClick = () => {
-    setCurView("forgotPw");
-  };
-  const handleSignUpClick = () => {
-    setCurView("signup");
-  };
-  const handleSignInClick = () => {
-    setCurView("signin");
+  const renderHeader = () => {
+    switch (curView) {
+      case "signin":
+        return "Sign In";
+      case "signup":
+        return "Sign up";
+      case "forgotPw":
+        return "Reset Password";
+    }
   };
   return (
     <form
@@ -93,7 +98,9 @@ export default function Form({ curView, setCurView }) {
       noValidate
       autoComplete="off"
     >
+      <header className={classes.header}>{renderHeader()}</header>
       <FormItems
+        formInfo={formInfo}
         errorInfo={errorInfo}
         handleOnFormChange={handleOnFormChange}
         curView={curView}
@@ -109,9 +116,6 @@ export default function Form({ curView, setCurView }) {
       <FormNavigation
         curView={curView}
         handleNavigationalClick={handleNavigationalClick}
-        handleSignUpClick={handleSignUpClick}
-        handleForgotPwClick={handleForgotPwClick}
-        handleSignInClick={handleSignInClick}
       ></FormNavigation>
     </form>
   );

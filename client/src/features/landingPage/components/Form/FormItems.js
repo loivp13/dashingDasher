@@ -1,6 +1,11 @@
 import React from "react";
-import { FormControl, TextField, InputLabel, Input } from "@material-ui/core";
-export default function FormItems({ curView, handleOnFormChange, errorInfo }) {
+import { FormControl, TextField } from "@material-ui/core";
+export default function FormItems({
+  curView,
+  handleOnFormChange,
+  errorInfo,
+  formInfo,
+}) {
   let formItemsInfo = {
     signin: {
       items: [
@@ -70,6 +75,7 @@ export default function FormItems({ curView, handleOnFormChange, errorInfo }) {
       return (
         <FormControl key={idx}>
           <TextField
+            value={formInfo[curView][item.label]}
             error={errorMsg ? true : false}
             id={item.id}
             label={item.label}
@@ -80,6 +86,7 @@ export default function FormItems({ curView, handleOnFormChange, errorInfo }) {
             helperText={
               errorMsg ? errorMsg : `enter your ${item.label.toLowerCase()}`
             }
+            autoComplete="true"
             onChange={(e) => {
               handleOnFormChange(item.label, e.currentTarget.value);
             }}

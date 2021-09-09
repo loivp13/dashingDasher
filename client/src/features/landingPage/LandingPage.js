@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import LandingPageHeroImage from "../../images/LandingHero.png";
+import LandingPageHeroImage from "../../images/LandingPage.jpg";
 import ForgotPwHeroImage from "../../images/forgotPwPage.jpg";
 import SignupHeroImage from "../../images/signUpPage.jpg";
 import useStyles from "./LandingPage.styles";
