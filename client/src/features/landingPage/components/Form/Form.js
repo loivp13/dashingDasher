@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import FormItems from "./FormItems";
 import FormNavigation from "./FormNavigation";
 import cloneDeep from "lodash/cloneDeep";
 import useStyles from "./Form.styles";
-import axios_api from "../../../../helpers/axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectNewErrorMessage,
+  selectSuccessMessage,
+  loginAsync,
+  removeErrorMessage,
+  signUpAsync,
+  addSuccessMessage,
+  forgotPwAsync,
+} from "../../../../app/users/userSlice";
+import { useHistory } from "react-router-dom";
 
 export default function Form({ curView, setCurView }) {
+  const dispatch = useDispatch();
+  let history = useHistory();
   let classes = useStyles();
+
+  //STATES
+  const newErrorMessage = useSelector(selectNewErrorMessage);
+  const successMessage = useSelector(selectSuccessMessage);
   let [errorInfo, setErrorInfo] = useState({
     signin: {},
     signup: {},
@@ -15,7 +31,7 @@ export default function Form({ curView, setCurView }) {
   });
   let [formInfo, setFormInfo] = useState({
     signin: {
-      username: "",
+      email: "",
       password: "",
     },
     signup: {
@@ -28,15 +44,25 @@ export default function Form({ curView, setCurView }) {
     },
   });
 
+  const removeMessages = () => {
+    if (newErrorMessage || successMessage) {
+      dispatch(removeErrorMessage());
+      dispatch(addSuccessMessage(""));
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     let cloneErrorInfo = cloneDeep(errorInfo);
+    let { email, username, password } = formInfo[curView];
     switch (curView) {
       case "signin":
         if (isValidateForm(cloneErrorInfo)) {
-          axios_api.post("/signin", {
-            username: formInfo[curView].username,
-            password: formInfo[curView].password,
+          dispatch(loginAsync(email, password)).then((isSuccessful) => {
+            console.log(isSuccessful);
+            if (isSuccessful) {
+              history.push("/home");
+            } else {
+            }
           });
         } else {
           setErrorInfo(cloneErrorInfo);
@@ -44,14 +70,14 @@ export default function Form({ curView, setCurView }) {
         break;
       case "signup":
         if (isValidateForm(cloneErrorInfo)) {
-          console.log("send http");
+          dispatch(signUpAsync(username, password, email));
         } else {
           setErrorInfo(cloneErrorInfo);
         }
         break;
       case "forgotPw":
         if (isValidateForm(cloneErrorInfo)) {
-          console.log("send http");
+          dispatch(forgotPwAsync(email));
         } else {
           setErrorInfo(cloneErrorInfo);
         }
@@ -59,6 +85,8 @@ export default function Form({ curView, setCurView }) {
     }
   };
   const handleOnFormChange = (label, value) => {
+    removeMessages();
+
     let cloneFormInfo = cloneDeep(formInfo);
     cloneFormInfo[curView][label] = value;
     setFormInfo(cloneFormInfo);
@@ -91,6 +119,10 @@ export default function Form({ curView, setCurView }) {
         return "Reset Password";
     }
   };
+
+  useEffect(() => {
+    removeMessages();
+  }, [curView]);
   return (
     <form
       onSubmit={handleSubmit}
@@ -99,20 +131,30 @@ export default function Form({ curView, setCurView }) {
       autoComplete="off"
     >
       <header className={classes.header}>{renderHeader()}</header>
-      <FormItems
-        formInfo={formInfo}
-        errorInfo={errorInfo}
-        handleOnFormChange={handleOnFormChange}
-        curView={curView}
-      ></FormItems>
-      <Button
-        className={classes.submitButton}
-        variant="contained"
-        color="primary"
-        type="submit"
-      >
-        {curView === "signin" ? "login" : "submit"}
-      </Button>
+      <div className={classes.newErrorMessage}>{newErrorMessage}</div>
+      <div className={classes.successMessage}>{successMessage}</div>
+      {successMessage ? (
+        ""
+      ) : (
+        <FormItems
+          formInfo={formInfo}
+          errorInfo={errorInfo}
+          handleOnFormChange={handleOnFormChange}
+          curView={curView}
+        ></FormItems>
+      )}
+      {successMessage ? (
+        ""
+      ) : (
+        <Button
+          className={classes.submitButton}
+          variant="contained"
+          color="primary"
+          type="submit"
+        >
+          {curView === "signin" ? "login" : "submit"}
+        </Button>
+      )}
       <FormNavigation
         curView={curView}
         handleNavigationalClick={handleNavigationalClick}

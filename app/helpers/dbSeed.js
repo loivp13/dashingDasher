@@ -5,8 +5,8 @@ module.exports = function () {
     username: "masterveloute",
     firstName: "Loyd",
     lastName: "VP",
-    email: "LVP@gmail.com",
-    password: "123456Guess",
+    email: "loivp@yahoo.com",
+    password: "123456",
   })
     .then((data) => {
       console.log("created veloute successful");

@@ -10,12 +10,12 @@ export default function FormItems({
     signin: {
       items: [
         {
-          label: "username",
-          labelFor: "Username",
-          id: "signin_username",
-          type: "text",
-          placeholder: "username",
-          props: { "aria-label": "enter your username" },
+          label: "email",
+          labelFor: "Email",
+          id: "signin_email",
+          type: "email",
+          placeholder: "email",
+          props: { "aria-label": "enter your email" },
         },
         {
           label: "password",

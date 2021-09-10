@@ -20,7 +20,7 @@ AWS.config.update({
 const ses = new AWS.SES({ apiVersion: "2010-12-1" });
 
 exports.register = (req, res) => {
-  const { firstName, lastName, username, password, email } = req.body;
+  const { username, password, email } = req.body;
   User.findOne({
     where: {
       email,
@@ -36,7 +36,7 @@ exports.register = (req, res) => {
 
     //if data does not exist send double optin email
     const token = jwt.sign(
-      { firstName, lastName, username, password, email },
+      { username, password, email },
       process.env.JWT_ACCOUNT_ACTIVATION
     );
     //send email returning a promise
@@ -154,14 +154,12 @@ exports.forgotPassword = (req, res) => {
     .then((data) => {
       //no user found
       if (!data) {
-        res.status(400).json({
-          message: "We could not verify your email. Please try again",
+        return res.status(400).json({
+          error: "We could not verify your email. Please try again",
         });
       }
-      //found user
-      console.log(data.fullName);
       const token = jwt.sign(
-        { name: data.fullName },
+        { username: data.username, email: data.email },
         process.env.JWT_RESET_PASSWORD,
         {
           expiresIn: "10min",

@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
 });
 
 // register a new User
-router.post("/", userRegisterValidator, runValidation, register);
+router.post("/signup", userRegisterValidator, runValidation, register);
 
 //activate user
 router.post("/activate", activate);

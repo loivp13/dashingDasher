@@ -15,6 +15,16 @@ const useStyles = makeStyles(() => ({
   header: {
     fontSize: "1.5rem",
   },
+  newErrorMessage: {
+    color: "red",
+    textAlign: "center",
+  },
+  successMessage: {
+    color: "green",
+    textAlign: "center",
+    fontSize: "1.2rem",
+    padding: "1rem",
+  },
 }));
 
 export default useStyles;
