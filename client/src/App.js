@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LandingPage from "./features/landingPage/LandingPage";
+import HomePage from "./features/homePage/HomePage";
 import AllPages from "./layout/AllPages.layout";
 
 function App() {
@@ -13,6 +14,13 @@ function App() {
             path="/"
             component={() => {
               return <LandingPage></LandingPage>;
+            }}
+          ></Route>
+          <Route
+            exact
+            path="/home"
+            component={() => {
+              return <HomePage></HomePage>;
             }}
           ></Route>
         </Switch>
