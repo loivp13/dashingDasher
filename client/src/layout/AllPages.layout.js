@@ -7,7 +7,7 @@ const useStyles = makeStyles(() => ({
     margin: "0 auto 0 auto",
   },
 }));
-export default function AllPages({ children }) {
+export default function AllPagesLayout({ children }) {
   let classes = useStyles();
   return <div className={classes.allPagesRoot}>{children}</div>;
 }
