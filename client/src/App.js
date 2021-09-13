@@ -26,7 +26,7 @@ function App() {
           ></Route>
           <Route
             exact
-            path="/activate/:to"
+            path="/activate/:token"
             component={() => {
               return <ActivatePage></ActivatePage>;
             }}
