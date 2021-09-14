@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TwoRowsLayout from "../../layout/TwoRowsLayout/TwoRows.Layout";
 import Row from "../../layout/TwoRowsLayout/Row";
 import {
@@ -7,39 +7,58 @@ import {
   CardContent,
   Button,
   Typography,
+  FormControl,
+  TextField,
 } from "@material-ui/core";
 import {
-  activationAsync,
   selectNewErrorMessage,
+  selectSuccessMessage,
+  setNewPwAsync,
 } from "../../app/users/userSlice";
+import { useStyles } from "./ForgotPwPage.styles";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useStyles } from "./ActivatePage.styles";
 import { useParams } from "react-router-dom";
 import { useBackToHome } from "../../hooks/useBackToHome";
 import LandingPageHeroImage from "../../images/LandingPage.jpg";
 
-export default function ActivatePage() {
+export default function ForgotPwPage() {
+  let classes = useStyles();
   //HOOKS
   let dispatch = useDispatch();
-  let history = useHistory();
   let handleBackToHome = useBackToHome();
-  let classes = useStyles();
   let { token } = useParams();
-  let newErrorMessage = useSelector(selectNewErrorMessage);
+  let history = useHistory();
 
-  const handleOnClick = () => {
-    dispatch(activationAsync(token)).then((isSuccessful) => {
-      if (isSuccessful) {
-        history.push("/home");
-      } else {
-        return;
-      }
-    });
+  //STATE
+  let newErrorMessage = useSelector(selectNewErrorMessage);
+  let newSuccessMessage = useSelector(selectSuccessMessage);
+  const [newPw, setNewPw] = useState("");
+  const [formErrors, setFormErrors] = useState("");
+  const validatePw = () => {
+    let errors = [];
+    if (newPw.length < 6) {
+      errors.push("Password must be 6 characters");
+    }
+    return errors;
+  };
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    let errors = validatePw(newPw);
+    if (errors.length > 0) {
+      setFormErrors(errors[0]);
+    } else {
+      dispatch(setNewPwAsync(newPw, token));
+      setFormErrors("");
+    }
+  };
+  const handleOnChange = (e) => {
+    setNewPw(e.target.value);
   };
 
   return (
-    <div className={classes.ActivatePage}>
+    <div className={classes.ForgotPwPage}>
       <TwoRowsLayout>
         <Row>
           <div className={classes.TopRow}>
@@ -67,12 +86,12 @@ export default function ActivatePage() {
                   gutterBottom
                   variant="h4"
                 >
-                  Ready to activate your account?
+                  Reset your password
                 </Typography>
                 {newErrorMessage ? (
                   <Typography
                     className={classes.ErrorMessage}
-                    color="secondary"
+                    color="error"
                     variant="subtitle1"
                   >
                     {newErrorMessage}
@@ -80,18 +99,47 @@ export default function ActivatePage() {
                 ) : (
                   ""
                 )}
+                {newSuccessMessage ? (
+                  <Typography
+                    className={classes.SuccessMessage}
+                    color="textSecondary"
+                    variant="subtitle1"
+                  >
+                    {newSuccessMessage}
+                  </Typography>
+                ) : (
+                  ""
+                )}
                 <Typography className={classes.SubHeader} color="textSecondary">
-                  Click below to activate your account and start ordering!
+                  Enter your new password
                 </Typography>
+                <form className={classes.Form}>
+                  <FormControl>
+                    <TextField
+                      onChange={handleOnChange}
+                      value={newPw}
+                      error={formErrors ? true : false}
+                      id="set_new_password"
+                      label="Set New Password"
+                      type="password"
+                      placeholder="password"
+                      required={true}
+                      helperText={
+                        formErrors ? formErrors : "Enter your password."
+                      }
+                    ></TextField>
+                  </FormControl>
+                </form>
               </CardContent>
+
               <CardActions>
                 <Button
-                  onClick={handleOnClick}
+                  onClick={handleOnSubmit}
                   variant="outlined"
                   color="primary"
                   size="large"
                 >
-                  Activate
+                  Reset
                 </Button>
               </CardActions>
             </Card>

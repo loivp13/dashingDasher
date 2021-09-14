@@ -65,18 +65,18 @@ exports.activate = (req, res) => {
   jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, (err, decoded) => {
     if (err) {
       console.log(err);
-      return status(401).json({
+      return res.status(401).json({
         error: "Expired link. Try again",
       });
     }
   });
 
-  const { firstName, lastName, email, password, username } = jwt.decode(token);
+  const { email, password, username } = jwt.decode(token);
 
   //check if another email was registered
   User.findOne({ where: { email } }).then((data) => {
     if (data) {
-      res.status(401).json({
+      return res.status(401).json({
         error: "Email was just taken",
       });
     }
@@ -85,16 +85,19 @@ exports.activate = (req, res) => {
   //create new user
   User.create({
     username,
-    firstName,
-    lastName,
     password,
     email,
   })
     .then((data) => {
-      res.send(data);
+      let jwtToken = jwt.sign({ userId: data.userId }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+
+      let { username, email } = data;
+      return res.send({ user: { username, email }, token: jwtToken });
     })
     .catch((err) => {
-      res.status(500).json({
+      return res.status(500).json({
         message:
           err.message ||
           "An error occurred while creating account. Please try again.",
@@ -142,10 +145,22 @@ exports.login = (req, res) => {
       }
     });
 };
-exports.requireSignin = expressJwt({
-  secret: process.env.JWT_SECRET,
-  algorithms: ["sha1", "RS256", "HS256"],
-});
+
+exports.requireSignin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
+      if (err) {
+        return res.status(403).json({ message: err });
+      }
+      req.user = data;
+      next();
+    });
+  } else {
+    return res.status(403).json({ message: "Login required." });
+  }
+};
 
 exports.forgotPassword = (req, res) => {
   const { email } = req.body;
@@ -200,29 +215,41 @@ exports.forgotPassword = (req, res) => {
     });
 };
 
-exports.resetPassword = (req, res) => {
-  const { newPassword, token } = req.body;
+exports.resetPassword = (req, res, next) => {
+  const { password, token } = req.body;
+  console.log(token);
+  jwt.verify(token, process.env.JWT_RESET_PASSWORD, (err, data) => {
+    if (err) {
+      res.status(403).json({ err });
+    } else {
+      req.user = data;
+    }
+  });
+  if (!req.user) {
+    next();
+  }
   User.findOne({ where: { resetToken: token } })
     .then((data) => {
       if (!data) {
         return res.status(400).json({
-          message: "Resetting password failed. Please try again",
+          content:
+            "Resetting password failed. Please try resetting your password again.",
         });
       }
       data
         .update(
           {
-            password: newPassword,
+            password,
           },
           { where: { resetToken: token } }
         )
         .then((data) => {
-          res.status(200).json({
+          return res.status(200).json({
             message: "Password successfully reset",
           });
         })
         .catch((err) => {
-          res.status(400).json({
+          return res.status(400).json({
             message:
               "An error occured while resetting password. Please try again.",
             err,
@@ -230,7 +257,7 @@ exports.resetPassword = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(400).json({
+      return res.status(400).json({
         message: "An error occured while resetting password. Please try again",
         err,
       });

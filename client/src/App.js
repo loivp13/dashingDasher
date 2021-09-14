@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import AllPagesLayout from "./layout/AllPages.Layout";
 import LandingPage from "./features/landingPage/LandingPage";
 import HomePage from "./features/homePage/HomePage";
-import AllPagesLayout from "./layout/AllPages.Layout";
 import ActivatePage from "./features/activationPage/ActivatePage";
+import ForgotPwPage from "./features/forgotPwPage/ForgotPwPage";
 
 function App() {
   return (
@@ -29,6 +30,13 @@ function App() {
             path="/activate/:token"
             component={() => {
               return <ActivatePage></ActivatePage>;
+            }}
+          ></Route>
+          <Route
+            exact
+            path="/forgotPw/:token"
+            component={() => {
+              return <ForgotPwPage></ForgotPwPage>;
             }}
           ></Route>
         </Switch>

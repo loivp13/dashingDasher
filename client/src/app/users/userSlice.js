@@ -48,14 +48,41 @@ export const {
 
 //###### GETTING STATE ##########
 export const selectNewErrorMessage = (state) => {
-  console.log(state);
   return state.user.errorMessages;
 };
 export const selectSuccessMessage = (state) => {
   return state.user.successMessages;
 };
+export const selectUser = (state) => {
+  return state.user.user;
+};
 
 //###### ASYNC OPERATIONS ##########
+export const activationAsync = (token) => async (dispatch, getState) => {
+  let isSuccessful = true;
+  try {
+    const response = await axios_api.post("/api/auth/activate", {
+      token,
+    });
+    console.log(response);
+
+    //save to localStorage
+    localStorage.setItem("user", JSON.stringify(response.data.user));
+    localStorage.setItem("token", JSON.stringify(response.data.token));
+
+    dispatch(login({ user: response.data.user, token: response.data.token }));
+  } catch (error) {
+    console.dir(error.response.data.error);
+    isSuccessful = false;
+    dispatch(
+      newErrorMessage({
+        message: error.response.data.error,
+      })
+    );
+  }
+  return isSuccessful;
+};
+
 export const loginAsync = (email, password) => async (dispatch, getState) => {
   let isSuccessful = true;
   try {
@@ -64,9 +91,13 @@ export const loginAsync = (email, password) => async (dispatch, getState) => {
       password,
     });
 
+    let { user, token } = response.data;
     //save to localStorage
-    localStorage.setItem("user", JSON.stringify(response.data.user));
-    localStorage.setItem("token", JSON.stringify(response.data.token));
+    if (!user || !token) {
+      throw new Error("User or token is undefined");
+    }
+    localStorage.setItem("user", JSON.stringify(user || null));
+    localStorage.setItem("token", JSON.stringify(token || null));
 
     dispatch(login({ user: response.data.user, token: response.data.token }));
   } catch (error) {
@@ -118,5 +149,30 @@ export const forgotPwAsync = (email) => async (dispatch, getState) => {
       })
     );
   }
+  return isSuccessful;
 };
+
+export const setNewPwAsync =
+  (password, token) => async (dispatch, getState) => {
+    let isSuccessful = true;
+    try {
+      const response = await axios_api.put("/api/auth/reset-password", {
+        password,
+        token,
+      });
+      dispatch(addSuccessMessage({ message: response.data.message }));
+    } catch (error) {
+      console.dir(error);
+      isSuccessful = false;
+      if (error.response.data.err.message === "jwt expired") {
+        dispatch(
+          newErrorMessage({
+            message: "Link has expired. Please try again.",
+          })
+        );
+      }
+    }
+    return isSuccessful;
+  };
+
 export default userSlice.reducer;

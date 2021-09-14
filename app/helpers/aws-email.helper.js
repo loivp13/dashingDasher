@@ -44,7 +44,7 @@ exports.forgotEmailPasswordParams = (email, token) => {
                   Reset Password Link
                 </h1>
                 <p>Please use the following link to reset your password.</p>
-                <p>${process.env.CLIENT_URL}/password/reset/${token}</p>
+                <p>${process.env.CLIENT_URL}/forgotPw/${token}</p>
             </html>`,
         },
       },

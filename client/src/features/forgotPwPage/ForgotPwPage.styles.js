@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/styles";
 
 export const useStyles = makeStyles(() => {
   return {
-    ActivatePage: {
+    ForgotPwPage: {
       minHeight: "100vh",
       width: "100%",
     },
@@ -13,6 +13,10 @@ export const useStyles = makeStyles(() => {
     ErrorMessage: {
       textAlign: "center",
     },
+    SuccessMessage: {
+      textAlign: "center",
+      color: "green",
+    },
     Header: {
       fontWeight: "bold",
       height: "100%",
@@ -20,6 +24,10 @@ export const useStyles = makeStyles(() => {
       marginTop: "1rem",
       marginLeft: "1rem",
       cursor: "pointer",
+    },
+    Form: {
+      display: "flex",
+      justifyContent: "center",
     },
     BotRow: {
       height: "60vh",
