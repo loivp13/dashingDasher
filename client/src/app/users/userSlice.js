@@ -72,11 +72,11 @@ export const activationAsync = (token) => async (dispatch, getState) => {
 
     dispatch(login({ user: response.data.user, token: response.data.token }));
   } catch (error) {
-    console.dir(error.response.data.error);
+    console.dir(error);
     isSuccessful = false;
     dispatch(
       newErrorMessage({
-        message: error.response.data.error,
+        message: error.response.data.message,
       })
     );
   }
@@ -126,7 +126,7 @@ export const signUpAsync =
       isSuccessful = false;
       dispatch(
         newErrorMessage({
-          message: error.response.data.error,
+          message: error.response.data.message,
         })
       );
     }
@@ -145,7 +145,7 @@ export const forgotPwAsync = (email) => async (dispatch, getState) => {
     isSuccessful = false;
     dispatch(
       newErrorMessage({
-        message: error.response.data.error,
+        message: error.response.data.message,
       })
     );
   }

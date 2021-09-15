@@ -66,7 +66,7 @@ exports.activate = (req, res) => {
     if (err) {
       console.log(err);
       return res.status(401).json({
-        error: "Expired link. Try again",
+        message: "Expired link. Try again",
       });
     }
   });
@@ -77,7 +77,7 @@ exports.activate = (req, res) => {
   User.findOne({ where: { email } }).then((data) => {
     if (data) {
       return res.status(401).json({
-        error: "Email was just taken",
+        message: "Email was just taken",
       });
     }
   });
@@ -170,7 +170,7 @@ exports.forgotPassword = (req, res) => {
       //no user found
       if (!data) {
         return res.status(400).json({
-          error: "We could not verify your email. Please try again",
+          message: "We could not verify your email. Please try again",
         });
       }
       const token = jwt.sign(
