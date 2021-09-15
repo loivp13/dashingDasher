@@ -1,9 +1,11 @@
 import React from "react";
-import { useStyles } from "./HomePage.styles";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
+import CuisineQuickSelect from "./components/CuisineQuickSelect/CuisineQuickSelect";
+
 import { selectUser } from "../../app/users/userSlice";
 import { useSelector } from "react-redux";
 import useAuthentication from "../../hooks/useAuthentication";
+import { useStyles } from "./HomePage.styles";
 
 export default function HomePage() {
   //HOOK
@@ -16,6 +18,7 @@ export default function HomePage() {
   return (
     <div>
       <Navbar></Navbar>
+      <CuisineQuickSelect></CuisineQuickSelect>
     </div>
   );
 }

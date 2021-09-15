@@ -62,4 +62,15 @@ export const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  Logo: {
+    width: "100%",
+  },
+  MobileMenu: {
+    width: "100%",
+    height: "100%",
+  },
+  NoItem: {},
+  MobileMenuList: {
+    padding: "1rem",
+  },
 }));

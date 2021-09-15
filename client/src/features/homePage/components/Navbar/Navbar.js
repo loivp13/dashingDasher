@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useState } from "react";
+//Material UI components
 import {
   AppBar,
   Toolbar,
@@ -11,18 +11,26 @@ import {
   Menu,
 } from "@material-ui/core";
 
+//ICON IMPORTS
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+
+//IMAGES
+import LogoImage from "../../../../images/Logo.png";
+
 import { useStyles } from "./Navbar.styles";
 
 export default function Navbar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -63,6 +71,7 @@ export default function Navbar() {
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
+      classes={{ paper: classes.MobileMenu, list: classes.MobileMenuList }}
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       id={mobileMenuId}
@@ -71,39 +80,39 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
+      <IconButton
+        onClick={handleMobileMenuClose}
+        edge="start"
+        className={classes.MobileMenuClose}
+        color="inherit"
+        aria-label="close mobile menu"
+      >
+        <HighlightOffIcon></HighlightOffIcon>
+      </IconButton>
+      {cartItems.length ? (
+        cartItems.map((e) => {
+          return (
+            <Typography align="center" variant="h6" color="inherit">
+              Item
+            </Typography>
+          );
+        })
+      ) : (
+        <Typography
+          align="center"
+          classes={classes.NoItem}
+          variant="h6"
           color="inherit"
         >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+          You have no items in cart. Add items to get started.
+        </Typography>
+      )}
     </Menu>
   );
 
   return (
     <div className={classes.grow}>
-      <AppBar color="inherit" position="sticky">
+      <AppBar color="inherit" position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -113,9 +122,11 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
-          </Typography>
+          <div className={classes.LogoBox}>
+            <img className={classes.Logo} src={`${LogoImage}`} alt="" />
+          </div>
+          <div className={classes.grow} />
+
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -129,7 +140,6 @@ export default function Navbar() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-          <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -158,9 +168,9 @@ export default function Navbar() {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color="secondary"
             >
-              <MoreIcon />
+              <ShoppingBasketIcon></ShoppingBasketIcon>
             </IconButton>
           </div>
         </Toolbar>
