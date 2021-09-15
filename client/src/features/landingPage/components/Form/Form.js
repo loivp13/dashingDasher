@@ -6,13 +6,13 @@ import cloneDeep from "lodash/cloneDeep";
 import useStyles from "./Form.styles";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectNewErrorMessage,
-  selectSuccessMessage,
-  loginAsync,
-  removeErrorMessage,
-  signUpAsync,
   addSuccessMessage,
   forgotPwAsync,
+  loginAsync,
+  selectNewErrorMessage,
+  selectSuccessMessage,
+  signUpAsync,
+  removeErrorMessage,
 } from "../../../../app/users/userSlice";
 import { useHistory } from "react-router-dom";
 
