@@ -1,15 +1,32 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import LandingPageHeroImage from "../../images/LandingPage.jpg";
-import ForgotPwHeroImage from "../../images/forgotPwPage.jpg";
-import SignupHeroImage from "../../images/signUpPage.jpg";
 import useStyles from "./LandingPage.styles";
 import Form from "./components/Form/Form";
 
+//HOOKS
+import useAuthentication from "../../hooks/useAuthentication";
+
+//SLICES
+import { useSelector } from "react-redux";
+import { selectUser } from "../../app/users/userSlice";
+
+//IMAGES
+import SignupHeroImage from "../../images/signUpPage.jpg";
+import LandingPageHeroImage from "../../images/LandingPage.jpg";
+import ForgotPwHeroImage from "../../images/forgotPwPage.jpg";
+
 export default function LandingPage() {
   const classes = useStyles();
+
+  let user = useSelector(selectUser);
+
+  //State
   let [curView, setCurView] = useState("signin");
 
+  //Hooks
+  let { handleAuthorizedUser } = useAuthentication(user);
+
+  handleAuthorizedUser(user);
   const renderOrderCss = (type) => {
     //ENABLE FLIPPING ORDER ON SIGNUP
     // if (curView === "signup" && type === "img") {

@@ -1,8 +1,9 @@
 import { alpha, makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
-  grow: {
+  Navbar: {
     flexGrow: 1,
+    marginBottom: "1rem",
   },
   menuButton: {
     marginRight: theme.spacing(2),

@@ -1,5 +1,7 @@
 import React from "react";
 import Navbar from "./components/Navbar/Navbar";
+import LeftAlignLayout from "../../layout/LeftAlignLayout/LeftAlign.Layout";
+import Slider from "../../global/components/Slider";
 import CuisineQuickSelect from "./components/CuisineQuickSelect/CuisineQuickSelect";
 
 import { selectUser } from "../../app/users/userSlice";
@@ -18,7 +20,11 @@ export default function HomePage() {
   return (
     <div>
       <Navbar></Navbar>
-      <CuisineQuickSelect></CuisineQuickSelect>
+      <LeftAlignLayout>
+        <Slider sizes={{ width: "calc(100vw - 1rem)", height: "auto" }}>
+          <CuisineQuickSelect></CuisineQuickSelect>
+        </Slider>
+      </LeftAlignLayout>
     </div>
   );
 }

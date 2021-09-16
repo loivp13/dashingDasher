@@ -98,12 +98,7 @@ export default function Navbar() {
           );
         })
       ) : (
-        <Typography
-          align="center"
-          classes={classes.NoItem}
-          variant="h6"
-          color="inherit"
-        >
+        <Typography align="center" variant="h6" color="inherit">
           You have no items in cart. Add items to get started.
         </Typography>
       )}
@@ -111,7 +106,7 @@ export default function Navbar() {
   );
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.Navbar}>
       <AppBar color="inherit" position="static">
         <Toolbar>
           <IconButton
